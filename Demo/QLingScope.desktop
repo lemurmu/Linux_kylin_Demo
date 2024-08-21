@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=QLingScope
+Type=Application
+Exec=/usr/share/QLingScope/QLingScope
+Icon=/usr/share/icons/QLingScope.png

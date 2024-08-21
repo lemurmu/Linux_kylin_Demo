@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <ApplicationIcon>QLingScope.ico</ApplicationIcon>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.2" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.2" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.2" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.2" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.2" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.2" />
+        <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.2" />
+        <PackageReference Include="ScottPlot.Avalonia" Version="5.0.36" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Resource Include="QLingScope.ico" CopyToPublishDirectory="PreserveNewest">
+            <LinuxPath>/usr/share/icons/QLingScope.ico</LinuxPath>
+        </Resource>
+        <Content Include="QLingScope.desktop" CopyToPublishDirectory="PreserveNewest">
+            <LinuxPath>/usr/share/applications/QLingScope.desktop</LinuxPath>
+        </Content>
+        <Resource Include="Resources\QLingScope.ico">
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+          <LinuxPath>/usr/share/icons/QLingScope.ico</LinuxPath>
+        </Resource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Program.cs">
+        <DependentUpon>PXIe6747.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\msyh.ttf" />
+      <EmbeddedResource Include="Resources\msyh.ttf" />
+    </ItemGroup>
+</Project>

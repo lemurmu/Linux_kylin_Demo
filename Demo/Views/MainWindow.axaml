@@ -1,0 +1,253 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:vm="clr-namespace:QLingScope.ViewModels"
+        xmlns:ScottPlot="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+        x:Class="QLingScope.MainWindow"
+        Height="830"
+        Width="1400"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen"
+        x:DataType="vm:MainWindowsViewModel"
+        Title="Oscilloscope">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowsViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="350"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid Margin="5 0 0 0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <!-- <lvc:CartesianChart ZoomMode="None"  Tooltip="{x:Null}"  TooltipTextPaint ="{x:Null}" TooltipPosition="Hidden" TooltipBackgroundPaint="{x:Null}" Margin="10 10 10 0" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" -->
+            <!--                     Series="{Binding Series}" -->
+            <!--                     Title="{Binding Title}"> -->
+            <!-- -->
+            <!-- </lvc:CartesianChart> -->
+            <ScottPlot:AvaPlot Name="wavechart" />
+
+            <DataGrid Margin="0 10" IsReadOnly="True" RowHeight="30" FontSize="14"
+                      Grid.Row="1" ItemsSource="{Binding MeasureCollection}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="100" Header="通道" Binding="{Binding ChName}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="最大值" Binding="{Binding Max}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="最小值" Binding="{Binding Min}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="峰值" Binding="{Binding FFVal}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="直流有效值" Binding="{Binding Dc}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="交流有效值" Binding="{Binding Ac}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="正占空比" Binding="{Binding PositiveCircle}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="负占空比" Binding="{Binding NegativeCircle}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="正脉冲宽度" Binding="{Binding PositivePulseWidth}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="负脉冲宽度" Binding="{Binding NegativePulseWidth}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="上升沿时间" Binding="{Binding RisingEdgeTime}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="下降沿时间" Binding="{Binding FallingEdgeTime}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="过冲电压差" Binding="{Binding OsVolt}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="150" Header="脉冲顶部不平坦度" Binding="{Binding PulseTopUnev}"></DataGridTextColumn>
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </Grid>
+
+        <Grid Column="1">
+            <Border Margin="10" Padding="20" Classes="Card">
+                <ScrollViewer>
+                    <DockPanel>
+                        <DockPanel.Styles>
+                            <Style Selector="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                            </Style>
+                        </DockPanel.Styles>
+
+                        <StackPanel>
+                            <Expander Header="TIME" IsExpanded="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="时基"></TextBlock>
+                                    <ComboBox Grid.Column="1" Margin="5" ItemsSource="{Binding TimeDivItems}"
+                                              SelectedIndex="{Binding TimeDivIndex}">
+                                    </ComboBox>
+                                    <TextBlock Grid.Row="1" Text="延迟"></TextBlock>
+                                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                        <TextBox Width="150" Margin="5" Text="{Binding TimeDelay}"></TextBox>
+                                        <TextBlock Text="uS"></TextBlock>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="2" Text="时钟参考"></TextBlock>
+                                    <ComboBox Grid.Row="2" SelectedIndex="{Binding Timerefer}" Grid.Column="1"
+                                              Margin="5">
+                                        <ComboBoxItem Content="板载参考" />
+                                        <ComboBoxItem Content="外部参考" />
+                                        <ComboBoxItem Content="机箱参考" />
+                                    </ComboBox>
+                                </Grid>
+                            </Expander>
+                            <Expander Header="CH1" IsExpanded="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="档位"></TextBlock>
+                                    <ComboBox SelectedIndex="{Binding VoltDivIndex}" Grid.Column="1" Margin="5"
+                                              ItemsSource="{Binding VoltDivItems}">
+                                    </ComboBox>
+                                    <TextBlock Grid.Row="1" Text="偏移"></TextBlock>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <TextBox Width="150" Margin="5" Text="{Binding Offset}"></TextBox>
+                                        <TextBlock Text="mV"></TextBlock>
+                                    </StackPanel>
+                                    <TextBlock VerticalAlignment="Center" Grid.Row="2" Text="阻抗"></TextBlock>
+                                    <StackPanel Margin="5" Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                                        <RadioButton IsChecked="{Binding HighImpedChecked}" Content="1MΩ"></RadioButton>
+                                        <RadioButton Margin="5" Content="50Ω"></RadioButton>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="3" Text="耦合方式"></TextBlock>
+                                    <StackPanel Margin="5" Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                                        <RadioButton IsChecked="{Binding DcChecked}" Content="直流"></RadioButton>
+                                        <RadioButton Margin="5" Content="交流"></RadioButton>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="4" Text="带宽限制"></TextBlock>
+                                    <StackPanel Margin="5" Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+                                        <RadioButton IsChecked="{Binding MaxBdChecked}" Content="100MHz"></RadioButton>
+                                        <RadioButton Margin="5" Content="20MHz"></RadioButton>
+                                    </StackPanel>
+                                </Grid>
+                            </Expander>
+                            <Expander Header="CH2" IsExpanded="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="档位"></TextBlock>
+                                    <ComboBox SelectedIndex="{Binding VoltDivIndex1}" Grid.Column="1" Margin="5"
+                                              ItemsSource="{Binding VoltDivItems}">
+                                    </ComboBox>
+                                    <TextBlock Grid.Row="1" Text="偏移"></TextBlock>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <TextBox Width="150" Margin="5" Text="{Binding Offset1}"></TextBox>
+                                        <TextBlock Text="mV"></TextBlock>
+                                    </StackPanel>
+                                    <TextBlock VerticalAlignment="Center" Grid.Row="2" Text="阻抗"></TextBlock>
+                                    <StackPanel Margin="5" Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                                        <RadioButton IsChecked="{Binding HighImpedChecked1}" Content="1MΩ"></RadioButton>
+                                        <RadioButton Margin="5" Content="50Ω"></RadioButton>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="3" Text="耦合方式"></TextBlock>
+                                    <StackPanel Margin="5" Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                                        <RadioButton IsChecked="{Binding DcChecked1}" Content="直流"></RadioButton>
+                                        <RadioButton Margin="5" Content="交流"></RadioButton>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="4" Text="带宽限制"></TextBlock>
+                                    <StackPanel Margin="5" Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+                                        <RadioButton IsChecked="{Binding MaxBdChecked1}" Content="100MHz"></RadioButton>
+                                        <RadioButton Margin="5" Content="20MHz"></RadioButton>
+                                    </StackPanel>
+                                </Grid>
+                            </Expander>
+                            <Expander Header="Trigger" IsExpanded="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="信源"></TextBlock>
+                                    <ComboBox Margin="5" SelectedIndex="{Binding Chsource}" Grid.Column="1">
+                                        <ComboBoxItem Content="CH1"></ComboBoxItem>
+                                        <ComboBoxItem Content="CH2"></ComboBoxItem>
+                                    </ComboBox>
+                                    <TextBlock Grid.Row="1" Text="触发模式"></TextBlock>
+                                    <ComboBox Margin="5" Grid.Row="1" SelectedIndex="{Binding Triggermode}"
+                                              Grid.Column="1">
+                                        <ComboBoxItem Content="模拟触发"></ComboBoxItem>
+                                        <ComboBoxItem Content="外部触发"></ComboBoxItem>
+                                        <ComboBoxItem Content="软件触发"></ComboBoxItem>
+                                        <ComboBoxItem Content="PXIe0" />
+                                        <ComboBoxItem Content="PXIe1" />
+                                        <ComboBoxItem Content="PXIe2" />
+                                        <ComboBoxItem Content="PXIe3" />
+                                        <ComboBoxItem Content="PXIe4" />
+                                        <ComboBoxItem Content="PXIe5" />
+                                        <ComboBoxItem Content="PXIe6" />
+                                        <ComboBoxItem Content="PXIe7" />
+                                    </ComboBox>
+                                    <TextBlock Grid.Row="2" Text="斜率"></TextBlock>
+                                    <ComboBox Margin="5" Grid.Row="2" SelectedIndex="{Binding Triggerway}"
+                                              Grid.Column="1">
+                                        <ComboBoxItem Content="下降沿"></ComboBoxItem>
+                                        <ComboBoxItem Content="上升沿"></ComboBoxItem>
+                                        <ComboBoxItem Content="边沿"></ComboBoxItem>
+                                    </ComboBox>
+                                    <TextBlock Grid.Row="3" Text="触发电平"></TextBlock>
+                                    <StackPanel Margin="5" Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                                        <TextBox Width="150" Margin="5" Text="{Binding TrggerVolt}"></TextBox>
+                                        <TextBlock Text="mV"></TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </Expander>
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+                                <Button Width="100" Height="30" Name="satrtBtn" Click="SatrtBtn_OnClick" Margin="0,10"
+                                        HorizontalContentAlignment="Center" Content="开始">
+                                </Button>
+                                <Button Width="100" Height="30" Background="OrangeRed" Name="stopBtn"
+                                        Click="StopBtn_OnClick" Margin="20 ,10"
+                                        HorizontalContentAlignment="Center" Content="停止">
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+
+                    </DockPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="200"></RowDefinition>
+            </Grid.RowDefinitions>
+        </Grid>
+
+    </Grid>
+</Window>
